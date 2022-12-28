@@ -10,3 +10,6 @@ make changes to files in configuartion dir
 
 # Uruchamianie
 docker run -v /etc/X.RopamNeo/:/X.RopamNeo/config/ xropamneo
+
+# Lub bezpośrednio ściagnięcie obrazu container.io:
+docker run -v /etc/X.RopamNeo/:/X.RopamNeo/config/ cloud.canister.io:5000/dymbol/xropamneo

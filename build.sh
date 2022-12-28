@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-docker build . -t xropamneo 
+docker build . -t xropamneo
