@@ -1,2 +1,4 @@
 #!/usr/bin/env bash
-docker build . -t xropamneo
+#driver=docker
+driver=podman
+$driver build . -t xropamneo

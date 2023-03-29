@@ -1,2 +1,4 @@
 #!/usr/bin/env bash
-docker run -v /etc/X.RopamNeo/:/X.RopamNeo/config/ xropamneo
+#driver=docker
+driver=podman
+$driver run -v /etc/X.RopamNeo/:/X.RopamNeo/config/ xropamneo
