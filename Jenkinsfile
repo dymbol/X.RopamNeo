@@ -16,11 +16,15 @@ pipeline {
         {        
             steps{
                 // ssh key exchange is needed between jenkins host and docker
-                sh 'cd src && rsync -v xropamneo-${BRANCH_NAME}-${BUILD_NUMBER}.tar user@host.xyz:/home/user/xropamneo-${BRANCH_NAME}-${BUILD_NUMBER}.tar'
-                sh "ssh user@host.xyz 'sudo k3s ctr images import /home/user/xropamneo-${BRANCH_NAME}-${BUILD_NUMBER}.tar'"
-                sh "sed -i 's/<IMAGE>/xropamneo-${BRANCH_NAME}:${BUILD_NUMBER}/' kubernetes/xropamneo-${BRANCH_NAME}.yml"
+                withCredentials([usernamePassword(credentialsId: 'CANISTER_ID', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                    sh "podman login --username=${USERNAME} --password=${PASSWORD} cloud.canister.io:5000"
+                }
+                sh "podman push cloud.canister.io:5000/dymbol/xropamneo:${BRANCH_NAME}-${BUILD_NUMBER}"
+                //sh "cd src && rsync -v xropamneo-${BRANCH_NAME}-${BUILD_NUMBER}.tar user@host.xyz:/home/user/xropamneo-${BRANCH_NAME}-${BUILD_NUMBER}.tar"
+                //sh "ssh user@host.xyz 'sudo k3s ctr images import /home/user/xropamneo-${BRANCH_NAME}-${BUILD_NUMBER}.tar'"
+                sh "sed -i 's/<IMAGE>/cloud.canister.io:5000/dymbol/xropamneo:${BRANCH_NAME}-${BUILD_NUMBER}' kubernetes/xropamneo-${BRANCH_NAME}.yml"
                 sh "sed -i 's/<BUILD_VERSION>/xropamneo-${BRANCH_NAME}:${BUILD_NUMBER}/' kubernetes/xropamneo-${BRANCH_NAME}.yml"
-                sh "scp kubernetes/xropamneo-${BRANCH_NAME}.yml user@host.xyz:/home/user/"
+                //sh "scp kubernetes/xropamneo-${BRANCH_NAME}.yml user@host.xyz:/home/user/"
                 sh "ssh user@host.xyz 'sudo kubectl --kubeconfig /etc/rancher/k3s/k3s.yaml apply -f /home/user/xropamneo-${BRANCH_NAME}.yml'"
             }    
         }

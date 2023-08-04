@@ -15,7 +15,8 @@ spec:
     spec:
       containers:
       - name: xropamneo
-        image: localhost/<IMAGE>
+        # image: localhost/<IMAGE>
+        image: <IMAGE>
         imagePullPolicy: Never
         volumeMounts:
         - mountPath: /X.RopamNeo/config/
